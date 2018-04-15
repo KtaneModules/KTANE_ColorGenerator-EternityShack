@@ -9,7 +9,7 @@ public class ColorGeneratorModule : MonoBehaviour
 {
 	public KMBombInfo BombInfo;
 	public KMBombModule BombModule;
-	public KMAudio KMAudio;
+	public KMAudio Audio;
 	public KMSelectable Red;
 	public KMSelectable Green;
 	public KMSelectable Blue;
@@ -18,6 +18,8 @@ public class ColorGeneratorModule : MonoBehaviour
 	public KMSelectable Submit;
     public TextMesh displayText;
     public GameObject displayBG;
+    public GameObject[] FakeStatusLight;
+    //public GetBombSeed bomb;
 	Material[] Materials; // Red, Green, Blue, Submit, Multiply
 	private static Color[] DefaultColors = new Color[] { RGBColor(237, 28, 36), RGBColor(34, 177, 76), RGBColor(63, 72, 204) };
 
@@ -102,6 +104,16 @@ public class ColorGeneratorModule : MonoBehaviour
 
         updateDisplay();
 
+        // (bomb.FoundBomb())
+        //{
+        //    displayText.color = RGBColor(0, 255, 0);
+        //    displayText.text = bomb.BombSeed().ToString();
+        //}
+        //else
+        //{
+        //    displayText.color = RGBColor(255, 0, 0);
+        //}
+
         string serial = "AB1CD2";
 
         List<string> data = BombInfo.QueryWidgets(KMBombInfo.QUERYKEY_GET_SERIAL_NUMBER, null);
@@ -143,7 +155,7 @@ public class ColorGeneratorModule : MonoBehaviour
 
 	private void HandleButtonPress()
 	{
-		KMAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
 		GetComponent<KMSelectable>().AddInteractionPunch();
 	}
 
@@ -216,6 +228,9 @@ public class ColorGeneratorModule : MonoBehaviour
 
         displayText.text = displayAnswer;
         displayText.color = finalColor;
+        FakeStatusLight[0].GetComponent<Renderer>().material.color = finalColor;
+        FakeStatusLight[1].GetComponent<Renderer>().material.color = finalColor;
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 
         BombModule.HandlePass();
  
@@ -233,6 +248,7 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             
             BombModule.HandleStrike();
+            StartCoroutine(FakeStrike());
             Log("Attempted to submit before bomb activated. Module reset.");
 
             red = 0;
@@ -252,7 +268,8 @@ public class ColorGeneratorModule : MonoBehaviour
         else
         {
             BombModule.HandleStrike();
-			Log("Submitted an incorrect color! ({0}, {1}, {2}) Module reset.", red, green, blue);
+            StartCoroutine(FakeStrike());
+            Log("Submitted an incorrect color! ({0}, {1}, {2}) Module reset.", red, green, blue);
 
 			red = 0;
             green = 0;
@@ -263,6 +280,15 @@ public class ColorGeneratorModule : MonoBehaviour
 		}
 
         return false;
+    }
+
+    IEnumerator FakeStrike()
+    {
+        FakeStatusLight[0].GetComponent<Renderer>().material.color = RGBColor(255, 0, 0);
+        FakeStatusLight[1].GetComponent<Renderer>().material.color = RGBColor(255, 0, 0);
+        yield return new WaitForSeconds(1f);
+        FakeStatusLight[0].GetComponent<Renderer>().material.color = RGBColor(0, 0, 0);
+        FakeStatusLight[1].GetComponent<Renderer>().material.color = RGBColor(0, 0, 0);
     }
 
 	bool HandlePressReset()
@@ -444,6 +470,11 @@ public class ColorGeneratorModule : MonoBehaviour
             }
 
             Reset.OnInteract();
+        }
+        else if (split[0] == "fakestrike")
+        {
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.Strike, transform);
+            StartCoroutine(FakeStrike());
         }
 	}
 }

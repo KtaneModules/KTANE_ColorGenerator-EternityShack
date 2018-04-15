@@ -1,0 +1,15 @@
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\KTANE_assembly_testing.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\KTANE_assembly_testing.pdb
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\Assembly-CSharp.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\UnityEngine.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\UnityEngine.UI.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\Google.ProtocolBuffers.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\log4net.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\KMFramework.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\PdfSharp.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\bin\Debug\UnityEngine.xml
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\obj\Debug\KTANE_assembly_testing.csprojResolveAssemblyReference.cache
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\obj\Debug\KTANE_assembly_testing.dll
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\obj\Debug\KTANE_assembly_testing.pdb
+C:\Users\serhan\Downloads\ColorGen_remade\KTANE_assembly_testing\KTANE_assembly_testing\obj\Debug\KTANE_assembly_testing.csproj.CoreCompileInputs.cache
