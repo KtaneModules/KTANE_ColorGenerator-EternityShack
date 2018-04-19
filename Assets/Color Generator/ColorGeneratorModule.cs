@@ -18,8 +18,6 @@ public class ColorGeneratorModule : MonoBehaviour
 	public KMSelectable Submit;
     public TextMesh displayText;
     public GameObject displayBG;
-    public GameObject[] FakeStatusLight;
-    //public GetBombSeed bomb;
 	Material[] Materials; // Red, Green, Blue, Submit, Multiply
 	private static Color[] DefaultColors = new Color[] { RGBColor(237, 28, 36), RGBColor(34, 177, 76), RGBColor(63, 72, 204) };
 
@@ -45,15 +43,27 @@ public class ColorGeneratorModule : MonoBehaviour
 	{
         if (r < 0)
         {
-            r = 0;
+            r = 1;
         }
         if (g < 0)
         {
-            g = 0;
+            g = 1;
         }
         if (b < 0)
         {
-            b = 0;
+            b = 1;
+        }
+        if (r > 255)
+        {
+            r = 255;
+        }
+        if (g > 255)
+        {
+            g = 255;
+        }
+        if (b > 255)
+        {
+            b = 255;
         }
 
         return new Color((float) r / 255, (float) g / 255, (float) b / 255);
@@ -103,16 +113,6 @@ public class ColorGeneratorModule : MonoBehaviour
         activated = true;
 
         updateDisplay();
-
-        // (bomb.FoundBomb())
-        //{
-        //    displayText.color = RGBColor(0, 255, 0);
-        //    displayText.text = bomb.BombSeed().ToString();
-        //}
-        //else
-        //{
-        //    displayText.color = RGBColor(255, 0, 0);
-        //}
 
         string serial = "AB1CD2";
 
@@ -196,13 +196,13 @@ public class ColorGeneratorModule : MonoBehaviour
 	{
 		Color finalColor = RGBColor(desiredred, desiredgreen, desiredblue);
 
-		for (int i = 0; i <= 100; i++)
+		for (int i = 0; i <= 255; i++)
 		{
 			for (int index = 0; index < 3; index++)
 			{
-                int newRed = UnityEngine.Random.Range(desiredred - (100 - i), desiredred + (100 - i));
-                int newGreen = UnityEngine.Random.Range(desiredgreen - (100 - i), desiredgreen + (100 - i));
-                int newBlue = UnityEngine.Random.Range(desiredblue - (100 - i), desiredblue + (100 - i));
+                int newRed = UnityEngine.Random.Range(desiredred - (255 - i), desiredred + (255 - i));
+                int newGreen = UnityEngine.Random.Range(desiredgreen - (255 - i), desiredgreen + (255 - i));
+                int newBlue = UnityEngine.Random.Range(desiredblue - (255 - i), desiredblue + (255 - i));
 
                 Materials[index].color = Color.Lerp(DefaultColors[index], finalColor, (float) i / 100);
                 displayText.color = RGBColor(newRed, newGreen, newBlue);
@@ -223,13 +223,11 @@ public class ColorGeneratorModule : MonoBehaviour
                 displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
             }
 
-			yield return new WaitForSeconds(0.05f);
+			yield return new WaitForSeconds(0.02f);
 		}
 
         displayText.text = displayAnswer;
         displayText.color = finalColor;
-        FakeStatusLight[0].GetComponent<Renderer>().material.color = finalColor;
-        FakeStatusLight[1].GetComponent<Renderer>().material.color = finalColor;
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 
         BombModule.HandlePass();
@@ -248,7 +246,6 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             
             BombModule.HandleStrike();
-            StartCoroutine(FakeStrike());
             Log("Attempted to submit before bomb activated. Module reset.");
 
             red = 0;
@@ -268,7 +265,6 @@ public class ColorGeneratorModule : MonoBehaviour
         else
         {
             BombModule.HandleStrike();
-            StartCoroutine(FakeStrike());
             Log("Submitted an incorrect color! ({0}, {1}, {2}) Module reset.", red, green, blue);
 
 			red = 0;
@@ -280,15 +276,6 @@ public class ColorGeneratorModule : MonoBehaviour
 		}
 
         return false;
-    }
-
-    IEnumerator FakeStrike()
-    {
-        FakeStatusLight[0].GetComponent<Renderer>().material.color = RGBColor(255, 0, 0);
-        FakeStatusLight[1].GetComponent<Renderer>().material.color = RGBColor(255, 0, 0);
-        yield return new WaitForSeconds(1f);
-        FakeStatusLight[0].GetComponent<Renderer>().material.color = RGBColor(0, 0, 0);
-        FakeStatusLight[1].GetComponent<Renderer>().material.color = RGBColor(0, 0, 0);
     }
 
 	bool HandlePressReset()
@@ -473,8 +460,8 @@ public class ColorGeneratorModule : MonoBehaviour
         }
         else if (split[0] == "fakestrike")
         {
-            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.Strike, transform);
-            StartCoroutine(FakeStrike());
+            yield return null;
+            yield return "multiple strikes";
         }
 	}
 }
