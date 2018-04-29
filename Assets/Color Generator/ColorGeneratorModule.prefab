@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 114000013035238994}
   - component: {fileID: 114000012057712090}
   - component: {fileID: 114000013137466966}
+  - component: {fileID: 114744227831413912}
   m_Layer: 0
   m_Name: ColorGeneratorModule
   m_TagString: Untagged
@@ -1503,6 +1504,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - GUI/KT 3D Text
+--- !u!114 &114744227831413912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011110508850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1684172311, guid: a882876e160679d48bf5cf5a67f7efdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114935155987361122
 MonoBehaviour:
   m_ObjectHideFlags: 1

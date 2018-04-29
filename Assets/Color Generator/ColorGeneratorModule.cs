@@ -223,15 +223,68 @@ public class ColorGeneratorModule : MonoBehaviour
                 displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
             }
 
-			yield return new WaitForSeconds(0.02f);
+			yield return new WaitForSeconds(0.01f);
 		}
 
         displayText.text = displayAnswer;
         displayText.color = finalColor;
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 
+        Camera.main.transform.Translate(new Vector3(-0.05f, 0, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.05f, 0.05f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.05f, -0.05f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(-0.05f, -0.05f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0, 0.05f, 0));
+        yield return new WaitForSeconds(0.01f);
+        //
+        Camera.main.transform.Translate(new Vector3(-0.04f, 0, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.04f, 0.04f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.04f, -0.04f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(-0.04f, -0.04f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0, 0.04f, 0));
+        yield return new WaitForSeconds(0.01f);
+        //
+        Camera.main.transform.Translate(new Vector3(-0.03f, 0, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.03f, 0.03f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.03f, -0.03f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(-0.03f, -0.03f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0, 0.03f, 0));
+        yield return new WaitForSeconds(0.01f);
+        //
+        Camera.main.transform.Translate(new Vector3(-0.02f, 0, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.02f, 0.02f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.02f, -0.02f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(-0.02f, -0.02f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0, 0.02f, 0));
+        yield return new WaitForSeconds(0.01f);
+        //
+        Camera.main.transform.Translate(new Vector3(-0.01f, 0, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.01f, 0.01f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0.01f, -0.01f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(-0.01f, -0.01f, 0));
+        yield return new WaitForSeconds(0.01f);
+        Camera.main.transform.Translate(new Vector3(0, 0.01f, 0));
+
         BombModule.HandlePass();
- 
     }
 
 
@@ -305,7 +358,7 @@ public class ColorGeneratorModule : MonoBehaviour
         return false;
     }
 
-    public string TwitchHelpMessage = "Submit a color using !{0} submit 123 123 123. Or, submit with hexadecimal using !{0} submit 7B7B7B";
+    public string TwitchHelpMessage = "Submit a color using !{0} submit 123 123 123.";
 
     public void TwitchHandleForcedSolve()
     {
@@ -387,57 +440,12 @@ public class ColorGeneratorModule : MonoBehaviour
                 yield return "sendtochaterror Please input numbers. (You know what a number is, right?)";
             }
 		}
-        if (split.Length == 2 && split[0] == "submit")
-        {
-            int myRed;
-            int myGreen;
-            int myBlue;
-
-            try
-            {
-                myRed = Convert.ToInt32(split[1].Substring(0, 2), 16);
-                myGreen = Convert.ToInt32(split[1].Substring(2, 2), 16);
-                myBlue = Convert.ToInt32(split[1].Substring(4, 2), 16);
-            }
-            catch (Exception)
-            {
-                yield break;
-            }
-            yield return null;
-
-            Reset.OnInteract();
-            yield return new WaitForSeconds(0.1f);
-
-            KMSelectable[] buttons = new KMSelectable[] { Red, Green, Blue };
-            int[] values = new int[] { myRed, myGreen, myBlue };
-            for (int i = 0; i < 3; i++)
-            {
-                for (int index = 0; index < 3; index++)
-                {
-                    for (int x = 0; x < values[index] % 10; x++)
-                    {
-                        buttons[index].OnInteract();
-                        yield return new WaitForSeconds(0.1f);
-                    }
-
-                    values[index] /= 10;
-                }
-
-                Multiply.OnInteract();
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            Submit.OnInteract();
-
-            if (myRed == desiredred && myGreen == desiredgreen && myBlue == desiredblue)
-            {
-                yield return "solve";
-            }
-        }
+        
         else if (split[0] == "troll")
         {
             yield return "Color Generator";
             yield return "waiting music";
+            yield return "sendtochat /me HAHAHAHA";
             Reset.OnInteract();
             yield return new WaitForSeconds(0.1f);
 
@@ -462,6 +470,17 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             yield return null;
             yield return "multiple strikes";
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.Strike, transform);
         }
-	}
+        else if (split[0] == "needystart")
+        {
+            yield return null;
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyActivated, transform);
+        }
+        else if (split[0] == "needyend")
+        {
+            yield return null;
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyWarning, transform);
+        }
+    }
 }
