@@ -1,0 +1,6 @@
+{
+	"ShakeCamera" : true,
+	"howToUse0" : "If ShakeCamera is true, the camera will shake after the module is solved. If you don't want this, set ShakeCamera to false.",
+	"EndingSequence" : true,
+	"howToUse1" : "When Color Generator is solved, the module will start a sequence of the buttons turning to the color of the desired color, and the display. If this setting is set to false, the module will just solve."
+}

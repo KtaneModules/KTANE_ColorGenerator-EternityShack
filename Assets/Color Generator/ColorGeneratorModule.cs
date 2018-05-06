@@ -157,6 +157,13 @@ public class ColorGeneratorModule : MonoBehaviour
 	{
 		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
 		GetComponent<KMSelectable>().AddInteractionPunch();
+
+        if (red > 255 || green > 255 || blue > 255)
+        {
+            BombModule.HandleStrike();
+
+            Reset.OnInteract();
+        }
 	}
 
     bool HandlePressRed()
@@ -196,93 +203,39 @@ public class ColorGeneratorModule : MonoBehaviour
 	{
 		Color finalColor = RGBColor(desiredred, desiredgreen, desiredblue);
 
-		for (int i = 0; i <= 255; i++)
-		{
-			for (int index = 0; index < 3; index++)
-			{
-                int newRed = UnityEngine.Random.Range(desiredred - (255 - i), desiredred + (255 - i));
-                int newGreen = UnityEngine.Random.Range(desiredgreen - (255 - i), desiredgreen + (255 - i));
-                int newBlue = UnityEngine.Random.Range(desiredblue - (255 - i), desiredblue + (255 - i));
-
-                Materials[index].color = Color.Lerp(DefaultColors[index], finalColor, (float) i / 100);
-                displayText.color = RGBColor(newRed, newGreen, newBlue);
-
-                if (newRed < 0)
+            for (int i = 0; i <= 255; i++)
+            {
+                for (int index = 0; index < 3; index++)
                 {
-                    newRed = 0;
-                }
-                if (newGreen < 0)
-                {
-                    newGreen = 0;
-                }
-                if (newBlue < 0)
-                {
-                    newBlue = 0;
+                    int newRed = UnityEngine.Random.Range(desiredred - (255 - i), desiredred + (255 - i));
+                    int newGreen = UnityEngine.Random.Range(desiredgreen - (255 - i), desiredgreen + (255 - i));
+                    int newBlue = UnityEngine.Random.Range(desiredblue - (255 - i), desiredblue + (255 - i));
+
+                    Materials[index].color = Color.Lerp(DefaultColors[index], finalColor, (float)i / 100);
+                    displayText.color = RGBColor(newRed, newGreen, newBlue);
+
+                    if (newRed < 0)
+                    {
+                        newRed = 0;
+                    }
+                    if (newGreen < 0)
+                    {
+                        newGreen = 0;
+                    }
+                    if (newBlue < 0)
+                    {
+                        newBlue = 0;
+                    }
+
+                    displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
                 }
 
-                displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
+                yield return new WaitForSeconds(0.01f);
             }
-
-			yield return new WaitForSeconds(0.01f);
-		}
 
         displayText.text = displayAnswer;
         displayText.color = finalColor;
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
-
-        Camera.main.transform.Translate(new Vector3(-0.05f, 0, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.05f, 0.05f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.05f, -0.05f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(-0.05f, -0.05f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0, 0.05f, 0));
-        yield return new WaitForSeconds(0.01f);
-        //
-        Camera.main.transform.Translate(new Vector3(-0.04f, 0, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.04f, 0.04f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.04f, -0.04f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(-0.04f, -0.04f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0, 0.04f, 0));
-        yield return new WaitForSeconds(0.01f);
-        //
-        Camera.main.transform.Translate(new Vector3(-0.03f, 0, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.03f, 0.03f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.03f, -0.03f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(-0.03f, -0.03f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0, 0.03f, 0));
-        yield return new WaitForSeconds(0.01f);
-        //
-        Camera.main.transform.Translate(new Vector3(-0.02f, 0, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.02f, 0.02f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.02f, -0.02f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(-0.02f, -0.02f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0, 0.02f, 0));
-        yield return new WaitForSeconds(0.01f);
-        //
-        Camera.main.transform.Translate(new Vector3(-0.01f, 0, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.01f, 0.01f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0.01f, -0.01f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(-0.01f, -0.01f, 0));
-        yield return new WaitForSeconds(0.01f);
-        Camera.main.transform.Translate(new Vector3(0, 0.01f, 0));
 
         BombModule.HandlePass();
     }
@@ -481,6 +434,7 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             yield return null;
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyWarning, transform);
+            yield return new WaitForSeconds(5f);
         }
     }
 }

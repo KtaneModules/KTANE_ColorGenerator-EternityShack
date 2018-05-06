@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 114000013035238994}
   - component: {fileID: 114000012057712090}
   - component: {fileID: 114000013137466966}
-  - component: {fileID: 114744227831413912}
+  - component: {fileID: 114907091139806032}
   m_Layer: 0
   m_Name: ColorGeneratorModule
   m_TagString: Untagged
@@ -1365,6 +1365,7 @@ MonoBehaviour:
   Multiply: {fileID: 114000012189469328}
   Reset: {fileID: 114000013566259946}
   Submit: {fileID: 114000013015234672}
+  ModSettings: {fileID: 114907091139806032}
   displayText: {fileID: 102093888207389316}
   displayBG: {fileID: 1000012967100716}
   TwitchHelpMessage: Submit a color using !{0} submit 123 123 123. Or, submit with
@@ -1504,7 +1505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - GUI/KT 3D Text
---- !u!114 &114744227831413912
+--- !u!114 &114907091139806032
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1512,9 +1513,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000011110508850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1684172311, guid: a882876e160679d48bf5cf5a67f7efdd, type: 3}
+  m_Script: {fileID: -289456416, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: "{ \t\"ShakeCamera\" : true, \t\"howToUse0\" : \"If ShakeCamera is true,
+    the camera will shake after the module is solved. If you don't want this, set
+    ShakeCamera to false.\", \t\"EndingSequence\" : true, \t\"howToUse1\" : \"When
+    Color Generator is solved, the module will start a sequence of the buttons turning
+    to the color of the desired color, and the display. If this setting is set to
+    false, the module will just solve.\" }"
+  SettingsPath: 
 --- !u!114 &114935155987361122
 MonoBehaviour:
   m_ObjectHideFlags: 1
