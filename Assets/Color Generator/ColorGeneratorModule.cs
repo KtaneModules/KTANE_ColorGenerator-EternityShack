@@ -162,39 +162,46 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             BombModule.HandleStrike();
 
-            Reset.OnInteract();
+            red = 0;
+            green = 0;
+            blue = 0;
+            multiplier = 1;
+
+            updateDisplay();
+
+            displayText.color = RGBColor(255, 0, 0);
         }
 	}
 
     bool HandlePressRed()
     {
-		HandleButtonPress();
-
         red += multiplier;
 
         updateDisplay();
+
+        HandleButtonPress();
 
         return false;
     }
 
     bool HandlePressGreen()
 	{
-		HandleButtonPress();
-
 		green += multiplier;
 
         updateDisplay();
+
+        HandleButtonPress();
 
         return false;
     }
 
     bool HandlePressBlue()
 	{
-		HandleButtonPress();
-
 		blue += multiplier;
 
         updateDisplay();
+
+        HandleButtonPress();
 
         return false;
     }
@@ -246,8 +253,6 @@ public class ColorGeneratorModule : MonoBehaviour
 	{
 		if (solved) return false;
 
-		HandleButtonPress();
-
         if (!activated)
         {
             
@@ -281,13 +286,13 @@ public class ColorGeneratorModule : MonoBehaviour
             displayText.color = RGBColor(255, 0, 0);
 		}
 
+        HandleButtonPress();
+
         return false;
     }
 
 	bool HandlePressReset()
 	{
-		HandleButtonPress();
-
 		red = 0;
 		green = 0;
 		blue = 0;
@@ -295,18 +300,20 @@ public class ColorGeneratorModule : MonoBehaviour
 
         updateDisplay();
 
-		return false;
+        HandleButtonPress();
+
+        return false;
 	}
 
 	bool HandlePressMultiply()
 	{
-		HandleButtonPress();
-
 		multiplier *= 10;
         if (multiplier > 100)
         {
             multiplier = 1;
         }
+
+        HandleButtonPress();
 
         return false;
     }
