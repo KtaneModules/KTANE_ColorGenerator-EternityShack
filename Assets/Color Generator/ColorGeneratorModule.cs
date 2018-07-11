@@ -122,8 +122,13 @@ public class ColorGeneratorModule : MonoBehaviour
 
         string serial = "AB1CD2";
 
-        KMBombInfoExtensions bie = new KMBombInfoExtensions();
-		serial = bie.GetSerialNumber(this.BombInfo);
+        using (List<string>.Enumerator enumerator = BombInfo.QueryWidgets(KMBombInfo.QUERYKEY_GET_SERIAL_NUMBER, null).GetEnumerator())
+	{
+		if (enumerator.MoveNext())
+		{
+			serial = JsonConvert.DeserializeObject<Dictionary<string, string>>(enumerator.Current)["serial"];
+		}
+	}
 
 		serialNumbers = serial.Select(c =>
 		{
