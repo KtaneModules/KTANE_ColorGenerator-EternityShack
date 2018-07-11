@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using Newtonsoft.Json;
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Collections;
+using Newtonsoft.Json;
 
 public class ColorGeneratorModule : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class ColorGeneratorModule : MonoBehaviour
 	public KMSelectable Submit;
     public TextMesh displayText;
     public GameObject displayBG;
+	public BombComponent RealBombModule;
 	Material[] Materials; // Red, Green, Blue, Submit, Multiply
 	private static Color[] DefaultColors = new Color[] { RGBColor(237, 28, 36), RGBColor(34, 177, 76), RGBColor(63, 72, 204) };
 
@@ -72,6 +73,7 @@ public class ColorGeneratorModule : MonoBehaviour
 	protected void Start()
     {
 		moduleID = idCounter++;
+		RealBombModule = BombModule.GetComponent<BombComponent>();
 
 		BombModule.OnActivate += getAnswer;
         Red.OnInteract += HandlePressRed;
@@ -79,7 +81,11 @@ public class ColorGeneratorModule : MonoBehaviour
         Blue.OnInteract += HandlePressBlue;
         Multiply.OnInteract += HandlePressMultiply;
 		Reset.OnInteract += HandlePressReset;
-        Submit.OnInteract += HandlePressSubmit;
+        Submit.OnInteract += delegate
+		{
+			HandlePressSubmit("null");
+			return false;
+		};
 		
 		Materials = new KMSelectable[] { Red, Green, Blue, Multiply, Reset, Submit }.Select(selectable => selectable.GetComponent<Renderer>().material).ToArray();
 
@@ -116,14 +122,8 @@ public class ColorGeneratorModule : MonoBehaviour
 
         string serial = "AB1CD2";
 
-        List<string> data = BombInfo.QueryWidgets(KMBombInfo.QUERYKEY_GET_SERIAL_NUMBER, null);
-
-        foreach (string response in data)
-        {
-            Dictionary<string, string> responseDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-            serial = responseDict["serial"];
-            break;
-        }
+        KMBombInfoExtensions bie = new KMBombInfoExtensions();
+		serial = bie.GetSerialNumber(this.BombInfo);
 
 		serialNumbers = serial.Select(c =>
 		{
@@ -206,50 +206,66 @@ public class ColorGeneratorModule : MonoBehaviour
         return false;
     }
 
-	IEnumerator ShowFinalColor()
+	IEnumerator ShowFinalColor(string split4)
 	{
 		Color finalColor = RGBColor(desiredred, desiredgreen, desiredblue);
 
-            for (int i = 0; i <= 255; i++)
+        for (int i = 0; i <= 255; i++)
+        {
+            for (int index = 0; index < 3; index++)
             {
-                for (int index = 0; index < 3; index++)
+                int newRed = UnityEngine.Random.Range(desiredred - (255 - i), desiredred + (255 - i));
+                int newGreen = UnityEngine.Random.Range(desiredgreen - (255 - i), desiredgreen + (255 - i));
+                int newBlue = UnityEngine.Random.Range(desiredblue - (255 - i), desiredblue + (255 - i));
+				    
+                Materials[index].color = Color.Lerp(DefaultColors[index], finalColor, (float)i / 100);
+                displayText.color = RGBColor(newRed, newGreen, newBlue);
+
+                if (newRed < 0)
                 {
-                    int newRed = UnityEngine.Random.Range(desiredred - (255 - i), desiredred + (255 - i));
-                    int newGreen = UnityEngine.Random.Range(desiredgreen - (255 - i), desiredgreen + (255 - i));
-                    int newBlue = UnityEngine.Random.Range(desiredblue - (255 - i), desiredblue + (255 - i));
-
-                    Materials[index].color = Color.Lerp(DefaultColors[index], finalColor, (float)i / 100);
-                    displayText.color = RGBColor(newRed, newGreen, newBlue);
-
-                    if (newRed < 0)
-                    {
-                        newRed = 0;
-                    }
-                    if (newGreen < 0)
-                    {
-                        newGreen = 0;
-                    }
-                    if (newBlue < 0)
-                    {
-                        newBlue = 0;
-                    }
-
-                    displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
+                    newRed = 0;
+                }
+                if (newGreen < 0)
+                {
+                    newGreen = 0;
+                }
+                if (newBlue < 0)
+                {
+                    newBlue = 0;
                 }
 
-                yield return new WaitForSeconds(0.01f);
+                displayText.text = "#" + newRed.ToString("X2") + newGreen.ToString("X2") + newBlue.ToString("X2");
             }
+
+            yield return new WaitForSeconds(0.01f);
+        }
 
         displayText.text = displayAnswer;
         displayText.color = finalColor;
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 
         BombModule.HandlePass();
+
+		StatusLight light = RealBombModule.StatusLightParent.StatusLight;
+
+		switch (split4)
+		{
+			case "useredonsolve":
+				light.StrikeLight.SetActive(true);
+				light.InactiveLight.SetActive(false);
+				light.PassLight.SetActive(false);
+				break;
+			case "useoffonsolve":
+				light.StrikeLight.SetActive(false);
+				light.InactiveLight.SetActive(true);
+				light.PassLight.SetActive(false);
+				break;
+		}
     }
 
 
 
-    bool HandlePressSubmit()
+    bool HandlePressSubmit(string split4)
 	{
 		if (solved) return false;
 
@@ -271,7 +287,7 @@ public class ColorGeneratorModule : MonoBehaviour
 
             displayAnswer = displayText.text;
 
-			StartCoroutine(ShowFinalColor());
+			StartCoroutine(ShowFinalColor(split4));
 		}
         else
         {
@@ -318,7 +334,7 @@ public class ColorGeneratorModule : MonoBehaviour
         return false;
     }
 
-    public string TwitchHelpMessage = "Submit a color using !{0} submit 123 123 123.";
+    public string TwitchHelpMessage = "Submit a color using \"!{0} press bigred 1,smallred 2,biggreen 1,smallblue 1\" !{0} press <buttonname> <amount of times to push>. If you want to be silly, you can have this module change the color of the status light when solved with \"!{0} press smallblue UseRedOnSolve\" or UseOffOnSolve. You can make this module tell a story with !{0} tellmeastory, make a needy sound with !{0} needystart, fake strike with !{0} faksestrike, and troll with !{0} troll";
 
     public void TwitchHandleForcedSolve()
     {
@@ -354,54 +370,43 @@ public class ColorGeneratorModule : MonoBehaviour
 
     public IEnumerator ProcessTwitchCommand(string command)
 	{
+		command = command.Replace(',', ' ');
 		string[] split = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-        if (split.Length == 4 && split[0] == "submit")
+		Dictionary<string, KMSelectable> cmdButtons = new Dictionary<string, KMSelectable>()
 		{
-			int myRed;
-			int myGreen;
-			int myBlue;
+			{"bigred", Red},
+			{"biggreen", Green},
+			{"bigblue", Blue},
+			{"smallred", Multiply},
+			{"smallgreen", Reset},
+			{"smallblue", Submit}
+		};
 
-			if (int.TryParse(split[1], out myRed) && int.TryParse(split[2], out myGreen) && int.TryParse(split[3], out myBlue))
+		KMSelectable currentSelect = null;
+		int selectCount = 0;
+
+		foreach (string cmd in split)
+		{
+			if (cmdButtons.ContainsKey(cmd))
 			{
-				yield return null;
-
-				Reset.OnInteract();
-				yield return new WaitForSeconds(0.1f);
-
-				KMSelectable[] buttons = new KMSelectable[] { Red, Green, Blue };
-				int[] values = new int[] { myRed, myGreen, myBlue };
-				for (int i = 0; i < 3; i++)
+				currentSelect = cmdButtons[cmd];
+			}
+			else if (int.TryParse(cmd, out selectCount))
+			{
+				while (selectCount != 0)
 				{
-					for (int index = 0; index < 3; index++)
-					{
-						for (int x = 0; x < values[index] % 10; x++)
-						{
-							buttons[index].OnInteract();
-							yield return new WaitForSeconds(0.1f);
-						}
-
-						values[index] /= 10;
-					}
-
-					Multiply.OnInteract();
+					currentSelect.OnInteract();
+					selectCount--;
 					yield return new WaitForSeconds(0.1f);
 				}
-
-				Submit.OnInteract();
-
-                if (myRed == desiredred && myGreen == desiredgreen && myBlue == desiredblue)
-                {
-                    yield return "solve";
-                }
-            }
-            else
-            {
-                yield return "sendtochaterror Please input numbers. (You know what a number is, right?)";
-            }
+			}
+			else if (currentSelect == Submit && (cmd == "useredonsolve" || cmd == "useoffonsolve"))
+			{
+				HandlePressSubmit(cmd);
+			}
 		}
-        
-        else if (split[0] == "troll")
+        if (split[0] == "troll")
         {
             yield return "Color Generator";
             yield return "waiting music";
@@ -437,11 +442,18 @@ public class ColorGeneratorModule : MonoBehaviour
             yield return null;
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyActivated, transform);
         }
-        else if (split[0] == "needyend")
-        {
-            yield return null;
-            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyWarning, transform);
-            yield return new WaitForSeconds(5f);
-        }
+		else if (split[0] == "tellmeastory")
+		{
+			yield return null;
+			yield return "waiting music";
+			string story = "#000000 once upon a time, there was a bomb with the seed " + RealBombModule.Bomb.Seed.ToString() + ", and it had a color generator module. a random lunatic decided to input an incorrect answer, and detonated the bomb. the end #000000";
+
+			for (int i = 0; i < story.Length - 6; i++)
+			{
+				string subStory = story.Substring(i,7);
+				displayText.text = subStory;
+				yield return new WaitForSeconds(0.1f);
+			}
+		}
     }
 }
