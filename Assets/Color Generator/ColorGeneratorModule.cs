@@ -385,11 +385,19 @@ public class ColorGeneratorModule : MonoBehaviour
 			{"bigblue", Blue},
 			{"smallred", Multiply},
 			{"smallgreen", Reset},
-			{"smallblue", Submit}
+			{"smallblue", Submit},
+		};
+
+		Dictionary<string, string> statusLightColors = new Dictionary<string, string>()
+		{
+			{"usegreenonsolve", "green"},
+			{"useredonsolve", "red"},
+			{"useoffonsolve", "off"},
+			{"userandomonsolve", "random"}
 		};
 
 		KMSelectable currentSelect = null;
-		int selectCount = 0;
+		string statusLightColor = "green"; 
 
 		foreach (string cmd in split)
 		{
@@ -397,18 +405,35 @@ public class ColorGeneratorModule : MonoBehaviour
 			{
 				currentSelect = cmdButtons[cmd];
 			}
-			else if (int.TryParse(cmd, out selectCount))
+			else if (statusLightColors.ContainsKey(cmd))
 			{
-				while (selectCount != 0)
-				{
-					currentSelect.OnInteract();
-					selectCount--;
-					yield return new WaitForSeconds(0.1f);
-				}
+				statusLightColor = statusLightColors[cmd];
 			}
-			else if (currentSelect == Submit && (cmd == "useredonsolve" || cmd == "useoffonsolve"))
+			else
 			{
-				HandlePressSubmit(cmd);
+				int selectCount = 0;
+				if (int.TryParse(cmd, out selectCount))
+				{
+					if (currentSelect == null)
+						continue;
+
+					if (currentSelect == Submit)
+					{
+						yield return null;
+						HandlePressSubmit(statusLightColor);
+						if(solved) yield return "solve";
+					}
+					else
+					{
+						while (selectCount != 0)
+						{
+							yield return null;
+							currentSelect.OnInteract();
+							selectCount--;
+							yield return new WaitForSeconds(0.1f);
+						}
+					}
+				}
 			}
 		}
         if (split[0] == "troll")
