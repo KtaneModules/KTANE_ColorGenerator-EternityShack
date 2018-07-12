@@ -441,7 +441,8 @@ public class ColorGeneratorModule : MonoBehaviour
 		}
         if (split[0] == "troll")
         {
-            yield return "Color Generator";
+	        yield return "antitroll Sorry, I am not going to press each button 75 times";
+			yield return "Color Generator";
             yield return "waiting music";
             yield return "sendtochat /me HAHAHAHA";
             Reset.OnInteract();
@@ -466,17 +467,20 @@ public class ColorGeneratorModule : MonoBehaviour
         }
         else if (split[0] == "fakestrike")
         {
+	        yield return "antitroll Sorry, I am not going to generate a fake strike.";
             yield return null;
             yield return "multiple strikes";
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.Strike, transform);
         }
         else if (split[0] == "needystart")
         {
+	        yield return "antitroll Sorry, I am not going to act like a needy module.";
             yield return null;
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyActivated, transform);
         }
         else if (split[0] == "needyend")
         {
+	        yield return "antitroll Sorry, I am not going to act like a needy module.";
 			yield return null;
 	        KMAudio.KMAudioRef audioRef = this.Audio.PlayGameSoundAtTransformWithRef(KMSoundOverride.SoundEffect.NeedyWarning, base.transform);
 	        yield return new WaitForSeconds(5f);
@@ -484,6 +488,7 @@ public class ColorGeneratorModule : MonoBehaviour
         }
 		else if (split[0] == "tellmeastory")
 		{
+			yield return "antitroll Sorry, I am not currently not in the mood to tell you a story.";
 			yield return null;
 			yield return "waiting music";
 			string story = "#000000 once upon a time, there was a bomb with the seed " + RealBombModule.Bomb.Seed.ToString() + ", and it had a color generator module. a random lunatic decided to input an incorrect answer, and detonated the bomb. the end #000000";
