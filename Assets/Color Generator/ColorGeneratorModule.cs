@@ -349,12 +349,7 @@ public class ColorGeneratorModule : MonoBehaviour
 
     public string TwitchHelpMessage = "Submit a color using \"!{0} press bigred 1,smallred 2,biggreen 1,smallblue 1\" !{0} press <buttonname> <amount of times to push>. If you want to be silly, you can have this module change the color of the status light when solved with \"!{0} press smallblue UseRedOnSolve\" or UseOffOnSolve. You can make this module tell a story with !{0} tellmeastory, make a needy sound with !{0} needystart or !{0} needyend, fake strike with !{0} faksestrike, and troll with !{0} troll";
 
-    public void TwitchHandleForcedSolve()
-    {
-        StartCoroutine(Solver());
-    }
-
-    private IEnumerator Solver()
+    private IEnumerator TwitchHandleForcedSolve()
     {
         Reset.OnInteract();
         yield return new WaitForSeconds(0.1f);
