@@ -253,17 +253,25 @@ public class ColorGeneratorModule : MonoBehaviour
 
 		StatusLight light = RealBombModule.StatusLightParent.StatusLight;
 
+		
 		switch (split4)
 		{
-			case "useredonsolve":
+			case "red":
 				light.StrikeLight.SetActive(true);
 				light.InactiveLight.SetActive(false);
 				light.PassLight.SetActive(false);
 				break;
-			case "useoffonsolve":
+			case "off":
 				light.StrikeLight.SetActive(false);
 				light.InactiveLight.SetActive(true);
 				light.PassLight.SetActive(false);
+				break;
+			case "random":
+				var lightColor = UnityEngine.Random.value;
+				if (lightColor < (1 / 3f))
+					goto case "red";
+				if (lightColor < (2 / 3f))
+					goto case "off";
 				break;
 		}
     }
