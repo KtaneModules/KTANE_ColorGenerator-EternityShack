@@ -347,7 +347,7 @@ public class ColorGeneratorModule : MonoBehaviour
         return false;
     }
 
-    public string TwitchHelpMessage = "Submit a color using \"!{0} press bigred 1,smallred 2,biggreen 1,smallblue 1\" !{0} press <buttonname> <amount of times to push>. If you want to be silly, you can have this module change the color of the status light when solved with \"!{0} press smallblue UseRedOnSolve\" or UseOffOnSolve. You can make this module tell a story with !{0} tellmeastory, make a needy sound with !{0} needystart, fake strike with !{0} faksestrike, and troll with !{0} troll";
+    public string TwitchHelpMessage = "Submit a color using \"!{0} press bigred 1,smallred 2,biggreen 1,smallblue 1\" !{0} press <buttonname> <amount of times to push>. If you want to be silly, you can have this module change the color of the status light when solved with \"!{0} press smallblue UseRedOnSolve\" or UseOffOnSolve. You can make this module tell a story with !{0} tellmeastory, make a needy sound with !{0} needystart or !{0} needyend, fake strike with !{0} faksestrike, and troll with !{0} troll";
 
     public void TwitchHandleForcedSolve()
     {
@@ -479,6 +479,13 @@ public class ColorGeneratorModule : MonoBehaviour
         {
             yield return null;
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.NeedyActivated, transform);
+        }
+        else if (split[0] == "needyend")
+        {
+			yield return null;
+	        KMAudio.KMAudioRef audioRef = this.Audio.PlayGameSoundAtTransformWithRef(KMSoundOverride.SoundEffect.NeedyWarning, base.transform);
+	        yield return new WaitForSeconds(5f);
+	        audioRef.StopSound();
         }
 		else if (split[0] == "tellmeastory")
 		{
