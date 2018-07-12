@@ -488,7 +488,7 @@ public class ColorGeneratorModule : MonoBehaviour
         }
 		else if (split[0] == "tellmeastory")
 		{
-			yield return "antitroll Sorry, I am not currently not in the mood to tell you a story.";
+			yield return "antitroll Sorry, I am not currently in the mood to tell you a story.";
 			yield return null;
 			yield return "waiting music";
 			string story = "#000000 once upon a time, there was a bomb with the seed " + RealBombModule.Bomb.Seed.ToString() + ", and it had a color generator module. a random lunatic decided to input an incorrect answer, and detonated the bomb. the end #000000";
